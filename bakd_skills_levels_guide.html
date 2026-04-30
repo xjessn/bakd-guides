@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAK'D EMPLOYEE LEVEL STRUCTURE</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f8f6; color: #1a1a1a; }
+  .wrap { padding: 2rem 1.5rem; max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; letter-spacing: 0.5px; }
+  .sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2rem; }
+  .nav-btn { padding: 6px 14px; font-size: 13px; border: 1px solid #ccc; border-radius: 20px; background: #fff; cursor: pointer; color: #555; transition: all 0.15s; }
+  .nav-btn:hover { border-color: #68CAD6; color: #1a8a96; }
+  .nav-btn.active { background: #68CAD6; border-color: #68CAD6; color: #fff; font-weight: 600; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .card { background: #fff; border: 1px solid #e8e6e0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+  .level-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+  .l0 { background: #F1EFE8; color: #444441; }
+  .l1 { background: #d6f5f8; color: #0e6b75; }
+  .l2 { background: #E6F1FB; color: #0C447C; }
+  .l3 { background: #FAEEDA; color: #633806; }
+  .l4 { background: #ffd6e8; color: #8c0040; }
+  .lmax { background: #ffc2da; color: #6b002f; }
+  .level-title { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+  .dept-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+  @media (max-width: 600px) { .dept-grid, .dept-grid.two { grid-template-columns: 1fr !important; } }
+  .dept-col { background: #f5f4f0; border-radius: 8px; padding: 10px 12px; }
+  .dept-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  ul.reqs { padding-left: 16px; }
+  ul.reqs li { font-size: 13px; color: #1a1a1a; line-height: 1.7; margin-bottom: 2px; }
+  .rule-card { border-left: 3px solid #68CAD6; padding: 10px 14px; background: #f5f4f0; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
+  .rule-card.pink { border-left-color: #FF2779; }
+  .rule-card.amber { border-left-color: #BA7517; }
+  .rule-title { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .rule-body { font-size: 13px; color: #555; line-height: 1.6; }
+  .timeline { display: flex; flex-direction: column; }
+  .tl-item { display: flex; gap: 14px; padding-bottom: 20px; position: relative; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: #68CAD6; margin-top: 4px; flex-shrink: 0; }
+  .tl-line { position: absolute; left: 5px; top: 16px; width: 2px; height: calc(100% - 4px); background: #e0ddd6; }
+  .tl-date { font-size: 12px; font-weight: 600; color: #1a8a96; min-width: 80px; flex-shrink: 0; }
+  .tl-text { font-size: 13px; color: #1a1a1a; line-height: 1.6; }
+  .faq-item { border-bottom: 1px solid #eee; padding: 14px 0; }
+  .faq-q { font-size: 14px; font-weight: 600; color: #1a1a1a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; user-select: none; }
+  .faq-a { font-size: 13px; color: #555; line-height: 1.7; margin-top: 8px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .chevron { transform: rotate(180deg); }
+  .chevron { font-size: 12px; color: #aaa; transition: transform 0.2s; flex-shrink: 0; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-right: 4px; margin-bottom: 4px; }
+  .tag-foh { background: #d6f5f8; color: #0e6b75; }
+  .tag-boh { background: #E6F1FB; color: #0C447C; }
+  .tag-mkt { background: #FAEEDA; color: #633806; }
+  .tag-k { background: #F1EFE8; color: #5F5E5A; }
+  .tag-p { background: #d6f5f8; color: #0e6b75; }
+  .bonus-card { background: #d6f5f8; border: 1px solid #68CAD6; border-radius: 8px; padding: 12px 14px; margin-top: 10px; }
+  .bonus-title { font-size: 13px; font-weight: 600; color: #0e6b75; margin-bottom: 4px; }
+  .bonus-body { font-size: 13px; color: #1a8a96; line-height: 1.6; }
+  .info-banner { border-radius: 8px; padding: 12px 14px; margin-bottom: 0.75rem; font-size: 13px; line-height: 1.6; }
+  .info-banner.teal { background: #d6f5f8; border: 1px solid #68CAD6; color: #0e6b75; }
+  .info-banner.pink { background: #ffe0ed; border: 1px solid #FF2779; color: #8c0040; margin-bottom: 1.5rem; }
+  .checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; color: #1a1a1a; line-height: 1.5; }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-box { width: 16px; height: 16px; border: 1.5px solid #68CAD6; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+  .section-title { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: #888; margin-bottom: 1.25rem; }
+  .eq { background: #f5f4f0; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 13px; color: #1a1a1a; line-height: 1.6; }
+  .eq-reveal { display: inline-block; margin-top: 6px; font-size: 12px; color: #1a8a96; cursor: pointer; border-bottom: 1px dashed #68CAD6; user-select: none; }
+  .eq-reveal:hover { color: #0e6b75; }
+  .eq-ans { display: none; margin-top: 6px; font-size: 12px; color: #1a8a96; font-style: italic; line-height: 1.5; }
+  .eq.open .eq-ans { display: block; }
+  .eq.open .eq-reveal { display: none; }
+  .samples-note { font-size: 12px; color: #888; background: #f5f4f0; border-radius: 8px; padding: 8px 12px; margin-bottom: 1rem; }
+  .window-highlight { border: 2px solid #68CAD6 !important; }
+  a.link { color: #1a8a96; text-decoration: underline; }
+
+  /* Level structure table */
+  .level-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .level-table th { background: #1a1a1a; color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .level-table th:first-child { border-radius: 8px 0 0 0; }
+  .level-table th:last-child { border-radius: 0 8px 0 0; }
+  .level-table td { padding: 10px 12px; border-bottom: 1px solid #eee; vertical-align: top; line-height: 1.6; }
+  .level-table tr:last-child td { border-bottom: none; }
+  .level-table tr:nth-child(even) td { background: #fafaf8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>BAK'D EMPLOYEE LEVEL STRUCTURE</h1>
+  <p class="sub">Your guide to how levels work, what to expect, and when.</p>
+
+  <div class="info-banner teal">A booking link for test slots will be released mid-April. Keep an eye on #serious-business for the announcement.</div>
+  <div class="info-banner pink">Study guides and SOPs can be found here: <a class="link" href="https://drive.google.com/drive/u/0/folders/1jKMdh8IT4dD04D48Jtcx5oAcDrLxMc9T" target="_blank">Bak'd Study Guides and SOPs</a>. Front of House materials are being revamped and will be available by end of next week. A Slack message will be sent out when they are live.</div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="show('overview')">Overview</button>
+    <button class="nav-btn" onclick="show('foh')">Front of house</button>
+    <button class="nav-btn" onclick="show('boh')">Back of house</button>
+    <button class="nav-btn" onclick="show('markets')">Markets</button>
+    <button class="nav-btn" onclick="show('howto')">How to level up</button>
+    <button class="nav-btn" onclick="show('examples')">Sample questions</button>
+    <button class="nav-btn" onclick="show('faq')">FAQ</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <div class="card" style="overflow-x: auto; margin-bottom: 1rem;">
+      <table class="level-table">
+        <thead>
+          <tr>
+            <th style="width:55px;">Level</th>
+            <th>Front of house</th>
+            <th>Back of house</th>
+            <th>Markets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="background:#F1EFE8; color:#444441; padding:2px 8px; border-radius:12px; font-weight:700; font-size:12px;">0</span></td>
+            <td><strong>Foundation</strong><br>Knowledge test, POS basics, barista basics</td>
+            <td><strong>Foundation</strong><br>Knowledge test, POS basics, production basics</td>
+            <td><strong>Foundation</strong><br>Knowledge test, POS basics, basic problem solving scenarios</td>
+          </tr>
+          <tr>
+            <td><span style="background:#d6f5f8; color:#0e6b75; padding:2px 8px; border-radius:12px; font-weight:700; font-size:12px;">1</span></td>
+            <td><strong>Novice</strong><br>Dialling in espresso shots, troubleshooting, bar cleaning practical</td>
+            <td><strong>Novice</strong><br>Shortage protocol, recipe recognition, balling speed test</td>
+            <td rowspan="3" style="vertical-align:middle; text-align:center; color:#aaa; font-size:12px; background:#fafaf8;">Markets has two levels only.<br><br>Test for Mastered when ready during any testing window.</td>
+          </tr>
+          <tr>
+            <td><span style="background:#E6F1FB; color:#0C447C; padding:2px 8px; border-radius:12px; font-weight:700; font-size:12px;">2</span></td>
+            <td><strong>Skilled</strong><br>Bar lingo, tools ID, latte art practical (rosetta or equivalent)</td>
+            <td><strong>Skilled</strong><br>Baking practical, decorating, packaging, label printing</td>
+          </tr>
+          <tr>
+            <td><span style="background:#FAEEDA; color:#633806; padding:2px 8px; border-radius:12px; font-weight:700; font-size:12px;">3</span></td>
+            <td><strong>Advanced</strong><br>Grinder troubleshoot, stacked latte art, blind taste test</td>
+            <td><strong>Advanced</strong><br>Lead baking practical, to-do list prioritization, train production</td>
+          </tr>
+          <tr>
+            <td><span style="background:#ffd6e8; color:#8c0040; padding:2px 8px; border-radius:12px; font-weight:700; font-size:12px;">4</span></td>
+            <td><strong>Mastered</strong><br>Machine mastery, train staff with customers present, training practical checklist</td>
+            <td><strong>Mastered</strong><br>Random questions from Levels 1 to 3, staggered baking, train baking and packaging</td>
+            <td><strong>Mastered</strong><br>Drinks at markets, can drive the van, can train other staff</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="level-title" style="margin-bottom: 10px;">Key things to know</div>
+
+      <div class="rule-card amber"><div class="rule-title">Transitioning from the old structure</div><div class="rule-body">Some of you have been given titles or pay that reflected our old structure, one that no longer serves where Bak'd is going. If your current pay is higher than where your level lands, you will be given a 3, 6, or 9 month timeline to level up to match it. If you have not reached that level by the end of your timeline, your pay will move to reflect the level you are at. We want to give everyone a fair runway, but the expectation is that you use it. You will receive a second email from JALANDY if this applies to you.</div></div>
+
+      <div class="rule-card"><div class="rule-title">Self-assessment first</div><div class="rule-body">You decide which level you think you're at and request that test. If you pass, that's your level. If you don't, you test for the level below. When in doubt, test higher, the worst that happens is you drop down a level.</div></div>
+
+      <div class="rule-card"><div class="rule-title">Two parts to every test</div><div class="rule-body">A knowledge test (80%+ to pass) and a practical test. You need to pass both. If you fail either part, you have not passed that level.</div></div>
+
+      <div class="rule-card"><div class="rule-title">Test results</div><div class="rule-body">You'll receive your test score after completing the knowledge test. Both managers reviewing your test will share results with you.</div></div>
+
+      <div class="rule-card"><div class="rule-title">Cross-training</div><div class="rule-body">You can level up in FOH, BOH, and Markets. You can test for FOH and BOH in the same window, just book separate sessions for each. There's also a small bonus for cross-training in additional departments. More details coming in Phase 2.</div></div>
+
+      <div class="rule-card"><div class="rule-title">New hires</div><div class="rule-body">Anyone hired after the rollout starts at Level 0 during probation. At their first assessment round, they self-assess and test for whatever level they believe they're at, same process as everyone else.</div></div>
+
+      <div class="rule-card"><div class="rule-title">Hours requirement (FOH + BOH)</div><div class="rule-body">To advance levels in FOH or BOH, you need 320+ total hours with the company. This is your total hours worked, not department-specific. You can check your hours anytime in Square Teams. Most relevant for full-time staff who want to grow with Bak'd, optional for part-time.</div></div>
+
+      <div class="rule-card"><div class="rule-title">Levels are company-wide</div><div class="rule-body">Your level follows you across all Bak'd locations. The structure is consistent whether you're at New West or Bak'd 2.</div></div>
+
+      <div class="rule-card pink"><div class="rule-title">Growth opportunities</div><div class="rule-body">Assistant Manager roles require Level 4 (Mastered) in both FOH and BOH. As Bak'd grows, those roles are created first from within.</div></div>
+    </div>
+  </div>
+
+  <!-- FOH -->
+  <div id="foh" class="section">
+    <p class="section-title">Front of house levels</p>
+    <p class="section-sub">Barista skills, POS, customer experience, and coffee mastery.</p>
+    <div class="card"><span class="level-badge l0">Level 0 — Foundation</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: Bak'd story, allergens, ingredients, all menu items</li><li>Delivery apps (Uber, Skip, DoorDash), packaging, bulk pricing, phone procedure, labelling, cleaning</li><li>POS basics</li><li>Barista basics</li></ul></div></div>
+    <div class="card"><span class="level-badge l1">Level 1 — Novice</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: dialling in coffee shots, over vs under extraction + how to fix</li><li>Troubleshooting guide without referring to it</li><li>Troubleshooting POS</li><li>Definitions of bar lingo</li><li>Practical: pulling shots, bar cleaning</li></ul></div></div>
+    <div class="card"><span class="level-badge l2">Level 2 — Skilled</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: bar lingo + tools identification, proper steamed milk (aeration, rolling, binding)</li><li>Practical: latte art (rosetta or equivalent)</li><li>Demonstrate proper steaming: lil foam, BAK'D foam, lotta foam</li><li>Little to no excess milk left in pitcher</li><li>Proper sequencing with extracting espresso and steaming milk</li><li>Clean and tidy workspace + steam wand (fail vs pass)</li></ul></div></div>
+    <div class="card"><span class="level-badge l3">Level 3 — Advanced</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: ice machine cleaning, grinder cleaning with rice, shot troubleshooting (channeling, slow pulls, yield risks, decaf specifics)</li><li>Practical: blind grinder dial-in (intentionally set off)</li><li>Execution of stacked latte art</li><li>Using Manual button, auto fail if shot is outside company standard (25 seconds)</li><li>Blind taste test: under, over, and well-extracted espresso</li><li>Extensive grinder dialling in + grinder troubleshoot</li></ul></div></div>
+    <div class="card">
+      <span class="level-badge l4">Level 4 — Mastered</span>
+      <div class="dept-col" style="margin-bottom:10px;"><ul class="reqs"><li>Knowledge test: how to explain rosetta + stack design execution, training approach for staff serving bad shots, espresso machine/grinder troubleshoot steps</li><li>Latte art on a macchiato, assessor calls which style on the day</li><li>Blind fix of espresso machine: identify what's been changed and correct it</li></ul></div>
+      <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 8px;">Training practical, pass/fail checklist</div>
+      <div style="background:#f5f4f0;border-radius:8px;padding:10px 14px;">
+        <div class="checklist-item"><div class="check-box"></div><div>Caught the intentional mistake made during the training session</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Trainee completed all steps without being prompted by assessor</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Every shot was weighed and served with correct yield</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Corrected the trainee's tamping technique (wrist straight, even, level, correct dose)</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Aeration, rolling, and binding all verbally explained or demonstrated</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Milk waste was addressed</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Trainee was observed sequencing and multitasking, not making one drink at a time</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Pouring technique coached, trainee set up for success, can identify what's going wrong</div></div>
+        <div class="checklist-item"><div class="check-box"></div><div>Workspace stayed clean throughout, spills addressed in real time</div></div>
+        <div style="margin-top:10px;font-size:12px;color:#888;">Both managers score independently. Minimum 7 of 9 checkpoints required to pass.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOH -->
+  <div id="boh" class="section">
+    <p class="section-title">Back of house levels</p>
+    <p class="section-sub">Cookie production, baking, decorating, and packaging mastery.</p>
+    <div class="card"><span class="level-badge l0">Level 0 — Foundation</span><div class="dept-col"><ul class="reqs"><li>Knowledge test</li><li>POS basics</li><li>Production basics: measuring, mixing, balling, tray labelling, scooping fillings</li></ul></div></div>
+    <div class="card"><span class="level-badge l1">Level 1 — Novice</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: average batch yield (~200), 5 ingredients + mixing order, FIFO, doughs with fillings + patty weight range (4.2 to 4.5oz), shortage protocol</li><li>Recipe recognition (when numbers look off)</li><li>Practical: balling speed test, bake assist practical</li></ul></div></div>
+    <div class="card"><span class="level-badge l2">Level 2 — Skilled</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: which doughs need pushing down (Matcha, Classic, OG), average bake time (12 min), tray rotation at 6 min, rack swap pairs (1&amp;3, 2&amp;4), wet dough fix</li><li>Practical: decorating, troubleshooting mixing, baking practical</li><li>Packaging practical: printing labels (markets &amp; orders)</li></ul></div></div>
+    <div class="card"><span class="level-badge l3">Level 3 — Advanced</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: dough cutoff for production (~150), timer add-ons for underbaked cookies (1:30 to 3 min), production priority order (Bisc first, OG last), handling partially done trays, spreading issues</li><li>Practical: lead baking, to-do list prioritization</li><li>Training production practical test</li><li>Troubleshoot baking scenarios</li></ul></div></div>
+    <div class="card"><span class="level-badge l4">Level 4 — Mastered</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: encompasses random questions from Levels 1 to 3</li><li>Practical: training baking + packaging</li><li>Staggered baking practical test</li><li>Bake high volumes using staggering method</li></ul></div></div>
+  </div>
+
+  <!-- MARKETS -->
+  <div id="markets" class="section">
+    <p class="section-title">Markets levels</p>
+    <p class="section-sub">No hours requirement for markets, test when you feel ready during the testing window.</p>
+    <div class="card"><span class="level-badge l0">Foundation</span><div class="dept-col"><ul class="reqs"><li>Knowledge test: Bak'd info, cookie order + flavours, allergens</li><li>POS basics + Square setup + mock transaction</li><li>Basic problem solving scenarios (weather, stock running low)</li><li>Booth setup, cookie display, sell-out protocol</li><li>Market checklist completion</li></ul></div></div>
+    <div class="card"><span class="level-badge lmax">Mastered</span><div class="dept-col"><ul class="reqs"><li>Practical test</li><li>Can do drinks at markets</li><li>Can drive the van</li><li>Can train other staff for markets</li></ul></div></div>
+    <div class="bonus-card"><div class="bonus-title">Cross-training bonus</div><div class="bonus-body">Adding markets to your FOH or BOH qualifications unlocks a small cross-training bonus. Full details coming in Phase 2.</div></div>
+  </div>
+
+  <!-- HOW TO LEVEL UP -->
+  <div id="howto" class="section">
+    <p class="section-title">How to level up</p>
+    <p class="section-sub">The process, the timeline, and what you need to do.</p>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:12px;">Step by step</div>
+      <div class="timeline">
+        <div class="tl-item"><div style="position:relative"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-date">Step 1</div><div class="tl-text">Decide which level you think you're at. When in doubt, test higher, the worst that happens is you drop down a level.</div></div></div>
+        <div class="tl-item"><div style="position:relative"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-date">Step 2</div><div class="tl-text">Book your test slot using the booking link (releasing mid-April). Separate bookings needed for FOH and BOH if testing both.</div></div></div>
+        <div class="tl-item"><div style="position:relative"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-date">Step 3</div><div class="tl-text">Take the knowledge test. You need 80%+ to pass. Your score will be shared with you after. Fail = you test for the level below.</div></div></div>
+        <div class="tl-item"><div style="position:relative"><div class="tl-dot"></div><div class="tl-line"></div></div><div><div class="tl-date">Step 4</div><div class="tl-text">Complete the practical test. Graded by both managers independently.</div></div></div>
+        <div class="tl-item"><div style="position:relative"><div class="tl-dot"></div></div><div><div class="tl-date">Step 5</div><div class="tl-text">Pass both = you're placed at that level. More info on what that means for pay is coming in Phase 2.</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;">Test windows</div>
+      <div class="dept-grid two" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+        <div class="dept-col window-highlight"><div class="dept-label" style="color:#1a8a96;">Phase 2, first test window</div><div style="font-size:14px;font-weight:700;color:#1a1a1a;">May 11 to May 24, 2026</div><div style="font-size:12px;color:#888;margin-top:4px;">This is when everyone gets tested and placed</div><div style="font-size:12px;color:#888;margin-top:4px;">Makeup window: week of May 25 (subject to availability)</div></div>
+        <div class="dept-col"><div class="dept-label">Future windows</div><ul class="reqs"><li>Early September</li><li>End of December</li><li>End of February / early March</li><li>Mid-May</li></ul></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;">Rules to know</div>
+      <div class="rule-card"><div class="rule-title">To pass a level</div><div class="rule-body">Score 80%+ on the knowledge test AND pass the practical. Both are required. Failing either part means you have not passed that level.</div></div>
+      <div class="rule-card"><div class="rule-title">If you fail after the initial rollout</div><div class="rule-body">You can rebook within available slots in the makeup week (subject to availability). If no slots remain, you'll test at the next testing period. Study hard and come prepared, slots fill up.</div></div>
+      <div class="rule-card"><div class="rule-title">Checking your hours</div><div class="rule-body">You can view your total hours anytime in Square Teams. The 320-hour requirement is based on total hours with the company, not department-specific.</div></div>
+      <div class="rule-card"><div class="rule-title">Markets</div><div class="rule-body">No hours requirement. Test when you feel ready during the testing window.</div></div>
+      <div class="rule-card"><div class="rule-title">New hires</div><div class="rule-body">Start at Level 0 during probation. At their first assessment round, self-assess and test for whatever level they believe they're at.</div></div>
+      <div class="rule-card"><div class="rule-title">Scheduling your test</div><div class="rule-body">Your manager will ensure they're available during the testing window. Use the booking link to lock in your slot.</div></div>
+      <div class="rule-card"><div class="rule-title">Levels are company-wide</div><div class="rule-body">Your level is consistent across all Bak'd locations.</div></div>
+    </div>
+  </div>
+
+  <!-- SAMPLE QUESTIONS -->
+  <div id="examples" class="section">
+    <p class="section-title">Sample test questions</p>
+    <p class="section-sub">Use these to study, not just memorize. Some answers are revealed on click. Others you'll need to work out yourself.</p>
+    <div class="samples-note">Tap "show answer" where available. Not every question has one, that's intentional.</div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-foh">FOH</span> <span class="tag tag-k">Knowledge</span> Level 1</div>
+      <div class="eq"><div>An espresso shot pulls in 15 seconds. Is it over- or under-extracted, and what do you adjust?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Under-extracted. Adjust grind finer or increase dose.</div></div>
+      <div class="eq"><div>What does over-extracted espresso taste like, and what causes it?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Bitter. Shot pulled too long or grind too fine.</div></div>
+      <div class="eq"><div>Walk me through troubleshooting the POS when it's not working.</div></div>
+      <div class="eq"><div>Define three pieces of bar lingo we use at Bak'd.</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-foh">FOH</span> <span class="tag tag-k">Knowledge</span> Level 2</div>
+      <div class="eq"><div>What are the 3 things that promote proper steamed milk?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Aeration, rolling, binding.</div></div>
+      <div class="eq"><div>What is the correct order from start to finish when steaming milk?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Measure, purge, aerate, roll, purge, bind.</div></div>
+      <div class="eq"><div>You steam milk and the end product is grainy and clumpy. What caused this?</div></div>
+      <div class="eq"><div>What does properly steamed milk look like?</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-foh">FOH</span> <span class="tag tag-p">Practical</span> Level 2</div>
+      <div class="eq"><div>Demonstrate steaming for lil foam, BAK'D foam, and lotta foam. One will be called randomly on the day.</div></div>
+      <div class="eq"><div>Free-pour a rosetta design. Pass/fail.</div></div>
+      <div class="eq"><div>Clean and tidy your workspace + steam wand at the end of your session. Pass/fail.</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-foh">FOH</span> <span class="tag tag-k">Knowledge</span> Level 3</div>
+      <div class="eq"><div>Walk me through how to properly clean the ice machine.</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Power off, remove all ice/water, remove slats and grate, sanitize, reinstall grate and slats, power on, dispose of first 5 batches of ice.</div></div>
+      <div class="eq"><div>Your shot is pulling slow. What are the two causes, and which do you fix first?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Improper dose or grind size. Adjust dose first, then grind size.</div></div>
+      <div class="eq"><div>What is the purpose of rice when cleaning the grinder, and in what order do you do it?</div></div>
+      <div class="eq"><div>What happens if you pull a shot with a crack in the puck?</div></div>
+      <div class="eq"><div>Why can decaf run fast?</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-foh">FOH</span> <span class="tag tag-p">Practical</span> Level 3</div>
+      <div class="eq"><div>Grinder will be intentionally set off. Diagnose and fix it without any reference materials.</div></div>
+      <div class="eq"><div>Use the Manual button to pull a shot. Auto fail if outside 25 seconds.</div></div>
+      <div class="eq"><div>Blind taste test: identify under-extracted, over-extracted, and well-extracted espresso.</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-foh">FOH</span> <span class="tag tag-p">Practical</span> Level 4 — Mastered</div>
+      <div class="eq"><div>Latte art on a macchiato, assessor calls the style on the day (rosetta or stack).</div></div>
+      <div class="eq"><div>Blind fix of espresso machine, something will be changed. Identify it and correct it.</div></div>
+      <div class="eq"><div>Training practical: train a lower-level barista. Assessors score 9 checkpoints independently. Minimum 7 of 9 to pass. You won't know which checkpoints are being watched.</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-boh">BOH</span> <span class="tag tag-k">Knowledge</span> Level 1</div>
+      <div class="eq"><div>What are the 5 ingredients in each cookie batch, in mixing order?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">1. Butter, 2. Sugars, 3. Eggs, 4. Flour/dry ingredients, 5. Toppings/mix-ins.</div></div>
+      <div class="eq"><div>Walk me through the full shortage protocol.</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">1. Flag to manager. 2. Get approval to go to Save-On. If not approved, plastic wrap each bowl with flavour, date, amount, initials. 3. Communicate to manager + production team. 4. Manager may adjust batch yield.</div></div>
+      <div class="eq"><div>What does FIFO mean and why does it matter?</div></div>
+      <div class="eq"><div>What is the patty weight range for doughs that have fillings?</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-boh">BOH</span> <span class="tag tag-k">Knowledge</span> Level 2</div>
+      <div class="eq"><div>What's the average bake time, and when do you rotate trays?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">12 minutes total. Rotate after the first 6 minutes.</div></div>
+      <div class="eq"><div>Which doughs need pushing down when prepping trays?</div></div>
+      <div class="eq"><div>Which racks are swapped when rotating during a bake?</div></div>
+      <div class="eq"><div>The dough is too wet mid-mix. What do you do?</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-boh">BOH</span> <span class="tag tag-k">Knowledge</span> Level 3</div>
+      <div class="eq"><div>What's the production priority order?</div><span class="eq-reveal" onclick="revealAns(this)">show answer</span><div class="eq-ans">Bisc first, then Oreo, Matcha, OG last.</div></div>
+      <div class="eq"><div>A cookie is still underbaked after 12 minutes. How much extra time do you add?</div></div>
+      <div class="eq"><div>What's the dough cutoff number before it hits the production to-do list?</div></div>
+      <div class="eq"><div>A cookie is spreading too much when it comes out. What do you do first?</div></div>
+      <div class="eq"><div>A few cookies on the same tray aren't done but the rest are. What do you do?</div></div>
+    </div>
+    <div class="card">
+      <div class="level-title" style="margin-bottom:10px;"><span class="tag tag-mkt">Markets</span> <span class="tag tag-k">Knowledge</span></div>
+      <div class="eq"><div>You arrive and the Square reader won't connect. Walk me through your steps.</div></div>
+      <div class="eq"><div>It's windy and your tent is starting to lift. What do you do, in what order?</div></div>
+      <div class="eq"><div>You've sold out of two flavours 45 minutes before close. What do you do?</div></div>
+      <div class="eq"><div>A customer is being verbally aggressive. Walk me through exactly how you handle it.</div></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div id="faq" class="section">
+    <p class="section-title">FAQ</p>
+    <p class="section-sub">Real questions, answered.</p>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">When does the booking link go live? <span class="chevron">▼</span></div><div class="faq-a">Mid-April. Watch #serious-business for the announcement. The test window itself runs May 11 to 24.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Where can I find my total hours? <span class="chevron">▼</span></div><div class="faq-a">You can check your total hours anytime in Square Teams.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Where can I find study materials? <span class="chevron">▼</span></div><div class="faq-a">All study guides and SOPs are here: <a class="link" href="https://drive.google.com/drive/u/0/folders/1jKMdh8IT4dD04D48Jtcx5oAcDrLxMc9T" target="_blank">Bak'd Study Guides and SOPs</a>. FOH materials are being revamped and will be available end of next week. A Slack message will go out when they are live.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I'm not sure if I'm a Level 2 or 3, what should I do? <span class="chevron">▼</span></div><div class="faq-a">When in doubt, test higher. The worst that happens is you drop down a level and get placed there instead. The test is the most reliable way to find out where you actually sit.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if my current pay is higher than where my level lands? <span class="chevron">▼</span></div><div class="faq-a">If your current pay reflects a previous role or title from our old structure, you'll be given a 3, 6, or 9 month timeline to level up to match it. If you haven't reached that level by the end of your timeline, your pay will move to reflect the level you are at. Anyone this applies to will receive a second email from JALANDY.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if I fail a test? <span class="chevron">▼</span></div><div class="faq-a">You'll test for the level below instead. After the initial rollout, you can rebook within whatever slots are still available in the makeup week (week of May 25), or book for the next testing period. Slots fill up, study hard and come prepared.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if there are no slots left in the makeup week? <span class="chevron">▼</span></div><div class="faq-a">If the makeup week is fully booked, you'll test at the next testing period. The best way to avoid this is to book early and come prepared the first time.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if I pass the knowledge test but fail the practical, or vice versa? <span class="chevron">▼</span></div><div class="faq-a">You need to pass both. If you fail either part, you haven't passed that level.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will I get my test score back? <span class="chevron">▼</span></div><div class="faq-a">Yes, your knowledge test score will be shared with you after you complete it.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I have to test in order, starting at Level 0? <span class="chevron">▼</span></div><div class="faq-a">Nope. You self-assess and test for the level you think you're at. When in doubt, test higher. The test validates your existing skill, it's not a school where you start at the beginning.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do FOH hours count toward a BOH test, and vice versa? <span class="chevron">▼</span></div><div class="faq-a">Yes. The 320 hours is your total hours worked with the company, not department-specific. You can check this in Square Teams.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I work in both FOH and BOH, how does that work? <span class="chevron">▼</span></div><div class="faq-a">You can test for both in the same window, just book separate sessions for each department.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a bonus for cross-training? <span class="chevron">▼</span></div><div class="faq-a">Yes, there's a small cross-training bonus for qualifying in additional departments. Full details are coming in Phase 2 around May 27.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need a certain number of hours to test for Markets? <span class="chevron">▼</span></div><div class="faq-a">No hours requirement for markets. Test when you feel ready during the testing window.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who grades my test? <span class="chevron">▼</span></div><div class="faq-a">Both managers review your test independently. For practicals, they score separately and compare. Results are shared with you after.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will a manager be available to test me? <span class="chevron">▼</span></div><div class="faq-a">Yes, your manager will ensure they're available during the testing window. Book your slot through the booking link when it goes live in mid-April.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if I can't make the May 11 to 24 window? <span class="chevron">▼</span></div><div class="faq-a">There's a makeup window the week of May 25, subject to availability. If no slots remain, you'll test at the next testing period. Flag it to your manager as early as possible.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I was just hired, what happens to me? <span class="chevron">▼</span></div><div class="faq-a">You start at Level 0 during your probation period. At your first assessment round, you self-assess and test for whatever level you think you're at, same process as everyone else.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">If I transfer to Bak'd 2, does my level carry over? <span class="chevron">▼</span></div><div class="faq-a">Yes. Levels are consistent across all Bak'd locations. Your level follows you.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What does Mastered (Level 4) open up for me? <span class="chevron">▼</span></div><div class="faq-a">Mastered in both FOH and BOH is the requirement for Assistant Manager roles. Those roles are created as Bak'd grows, Bak'd 2, Bak'd 3, and beyond. If you're aiming for leadership, this is the path.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I see the actual test in advance? <span class="chevron">▼</span></div><div class="faq-a">No, questions are kept private so tests stay fair. The sample questions in this guide are a great study resource. There are also multiple versions of each test.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if I think my result is wrong or unfair? <span class="chevron">▼</span></div><div class="faq-a">Email Jess and Andy immediately at <a class="link" href="mailto:jess@bakdcookies.ca">jess@bakdcookies.ca</a> and <a class="link" href="mailto:andy@bakdcookies.ca">andy@bakdcookies.ca</a>. If there's a genuine concern about how a test was graded, it will be reviewed.</div></div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const map = ['overview','foh','boh','markets','howto','examples','faq'];
+  document.querySelectorAll('.nav-btn')[map.indexOf(id)].classList.add('active');
+}
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+function revealAns(el) {
+  el.parentElement.classList.add('open');
+}
+</script>
+</body>
+</html>
